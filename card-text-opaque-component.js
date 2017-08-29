@@ -29,8 +29,18 @@ class OpaqueTextImageCard {
         this.state = new State()
     }
     draw(context) {
+        const w = this.iamge.width, h = this.image.height
         context.save()
         context.drawImage(this.image,0,0)
+        context.save()
+        context.globalAlpha = 0.45
+        context.fillStyle = 'black'
+        context.fillRect(0,h*(1-this.state.scale),w,h*this.state.scale)
+        context.restore()
+        context.fillStyle = 'white'
+        context.font = context.font.replace(/\d{2}/,Math.min(w,h)/10)
+        const tw = w/2 - context.measureText(this.text).width
+        context.fillText(this.text,tw,h - (h/2)*this.state.scale)
         context.restore()
     }
     update() {
