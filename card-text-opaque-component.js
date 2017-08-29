@@ -12,7 +12,24 @@ class CardTextOpaqueComponent extends HTMLElement {
         canvas.width = this.image.width
         canvas.height = this.image.height
         const context = canvas.getContext('2d')
+        if(!this.opaqueTextImageCard) {
+            this.opqaueTextImageCard = new OpaqueTextImageCard(this.text,this.image)
+        }
+        this.opaqueTextImageCard.draw(context)
         this.img.src = canvas.toDataURL()
+    }
+    start() {
+        if(this.opaqueTextImageCard) {
+            this.opaqueTextImageCard.startUpdate()
+        }
+    }
+    update() {
+        if(this.opaqueTextImageCard) {
+            this.opaqueTextImageCard.update()
+        }
+    }
+    stop() {
+        return this.opaqueTextImageCard && this.opaqueTextImageCard.stopUpdate()
     }
     connectedCallback() {
         this.image = new Image()
