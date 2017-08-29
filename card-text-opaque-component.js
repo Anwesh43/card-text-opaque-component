@@ -22,3 +22,47 @@ class CardTextOpaqueComponent extends HTMLElement {
         }
     }
 }
+class OpaqueTextImageCard {
+    constructor(text,image) {
+        this.text = text
+        this.image = image
+        this.state = new State()
+    }
+    draw(context) {
+        context.save()
+        context.drawImage(this.image,0,0)
+        context.restore()
+    }
+    update() {
+        this.state.update()
+    }
+    stopUpdate() {
+        return this.state.stopped()
+    }
+    startUpdate() {
+        this.state.start()
+    }
+}
+class State {
+    constructor() {
+        this.scale = 0
+        this.animDir = 0
+    }
+    update() {
+        this.scale += 0.1*this.animDir
+        if(this.scale > 1) {
+            this.animDir = 0
+            this.scale = 1
+        }
+        if(this.scale < 0) {
+            this.scale = 0
+            this.animDir = 0
+        }
+    }
+    stopped() {
+          return this.animDir == 0
+    }
+    start() {
+        this.animDir = 1 - 2*this.scale
+    }
+}
