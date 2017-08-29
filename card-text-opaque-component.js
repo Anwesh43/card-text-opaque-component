@@ -137,3 +137,4 @@ class MouseHandler {
         }
     }
 }
+customElements.define('card-text-opaque-comp',CardTextOpaqueComponent)
