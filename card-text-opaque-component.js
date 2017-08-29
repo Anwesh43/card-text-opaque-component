@@ -13,7 +13,8 @@ class CardTextOpaqueComponent extends HTMLElement {
         canvas.height = this.image.height
         const context = canvas.getContext('2d')
         if(!this.opaqueTextImageCard) {
-            this.opqaueTextImageCard = new OpaqueTextImageCard(this.text,this.image)
+            this.opaqueTextImageCard = new OpaqueTextImageCard(this.text,this.image)
+            console.log(this.opaqueTextImageCard)
         }
         this.opaqueTextImageCard.draw(context)
         this.img.src = canvas.toDataURL()
@@ -49,7 +50,7 @@ class OpaqueTextImageCard {
         this.state = new State()
     }
     draw(context) {
-        const w = this.iamge.width, h = this.image.height
+        const w = this.image.width, h = this.image.height
         context.save()
         context.drawImage(this.image,0,0)
         context.save()
@@ -58,9 +59,10 @@ class OpaqueTextImageCard {
         context.fillRect(0,h*(1-this.state.scale),w,h*this.state.scale)
         context.restore()
         context.fillStyle = 'white'
-        context.font = context.font.replace(/\d{2}/,Math.min(w,h)/10)
-        const tw = w/2 - context.measureText(this.text).width
-        context.fillText(this.text,tw,h - (h/2)*this.state.scale)
+        const fontSize = Math.min(w,h)/10
+        context.font = context.font.replace(/\d{2}/,fontSize)
+        const tw = w/2 - context.measureText(this.text).width/2
+        context.fillText(this.text,tw,h+fontSize - (h/2+fontSize)*this.state.scale)
         context.restore()
     }
     update() {
@@ -79,7 +81,7 @@ class State {
         this.animDir = 0
     }
     update() {
-        this.scale += 0.1*this.animDir
+        this.scale += 0.125*this.animDir
         if(this.scale > 1) {
             this.animDir = 0
             this.scale = 1
@@ -112,7 +114,7 @@ class Animator  {
                     this.animated = false
                     clearInterval(interval)
                 }
-            },50)
+            },10)
         }
     }
 }
@@ -126,13 +128,13 @@ class MouseHandler {
         this.element.onmouseover = () => {
             if(!this.over && !this.animator.animated) {
                 this.over = true
-                this.animator.start()
+                this.animator.startAnimation()
             }
         }
         this.element.onmouseout = () => {
             if(this.over && !this.animator.animated) {
                 this.over = false
-                this.animator.start()
+                this.animator.startAnimation()
             }
         }
     }
