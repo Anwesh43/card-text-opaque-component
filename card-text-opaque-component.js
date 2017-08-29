@@ -37,6 +37,10 @@ class CardTextOpaqueComponent extends HTMLElement {
         this.image.onload = () => {
             this.render()
         }
+        this.animator = new Animator(this)
+        this.img.onhover = () => {
+            this.animator.start()
+        }
     }
 }
 class OpaqueTextImageCard {
@@ -91,5 +95,25 @@ class State {
     }
     start() {
         this.animDir = 1 - 2*this.scale
+    }
+}
+class Animator  {
+    constructor(component) {
+        this.animated = false
+        this.component = component
+    }
+    startAnimation() {
+        if(!this.animated) {
+            this.animated = true
+            this.component.start()
+            const interval = setInterval(()=>{
+                this.component.render()
+                this.component.update()
+                if(this.component.stop()) {
+                    this.animated = false
+                    clearInterval(interval)
+                }
+            },50)
+        }
     }
 }
