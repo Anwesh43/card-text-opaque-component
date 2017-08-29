@@ -38,9 +38,8 @@ class CardTextOpaqueComponent extends HTMLElement {
             this.render()
         }
         this.animator = new Animator(this)
-        this.img.onhover = () => {
-            this.animator.start()
-        }
+        this.mouseHandler = new MouseHandler(this.animator,this.img)
+        this.mouseHandler.handleHover()
     }
 }
 class OpaqueTextImageCard {
@@ -114,6 +113,27 @@ class Animator  {
                     clearInterval(interval)
                 }
             },50)
+        }
+    }
+}
+class MouseHandler {
+    constructor(animator,element) {
+        this.over = false
+        this.animator = animator
+        this.element = element
+    }
+    handleHover() {
+        this.element.onmouseover = () => {
+            if(!this.over && !this.animator.animated) {
+                this.over = true
+                this.animator.start()
+            }
+        }
+        this.element.onmouseout = () => {
+            if(this.over && !this.animator.animated) {
+                this.over = false
+                this.animator.start()
+            }
         }
     }
 }
